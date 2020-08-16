@@ -1,0 +1,34 @@
+def cargar_movies(nombre_archivo:str)->list:
+    peliculas=[]
+    archivo=open(nombre_archivo,"r")
+    titulos=archivo.readline()
+    linea=archivo.readline()
+    while len(linea)>0:
+        datos=linea.split(",")
+        pelicula={}
+        pelicula["id"]=datos[0]
+        pelicula["budget"]=datos[1]
+        pelicula["genres"]=datos[2]
+        pelicula["imdb_id"]=datos[3]
+        pelicula["original_language"]=datos[4]
+        pelicula["original_title"]=datos[5]
+        pelicula["overview"]=datos[6]
+        pelicula["popularity"]=datos[7]
+        pelicula["popularity_companies"]=datos[8]
+        pelicula["popularity_countries"]=datos[9]
+        pelicula["release_date"]=datos[10]
+        pelicula["revenue"]=datos[11]
+        pelicula["runtime"]=datos[12]
+        pelicula["spoken_languages"]=datos[13]
+        pelicula["status"]=datos[14]
+        pelicula["tagline"]=datos[15]
+        pelicula["title"]=datos[16]
+        pelicula["vote_average"]=datos[17]
+        pelicula["vote_count"]=datos[18]
+        pelicula["production_companies_number"]=datos[19]
+        pelicula["spoken_languages_number"]=datos[20]
+        
+        peliculas.append(pelicula)
+        linea=archivo.readline()
+    archivo.close()
+    return peliculas
