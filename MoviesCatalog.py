@@ -231,11 +231,12 @@ def buenas_peliculas(movies:list, movies_casting:str, nombre_director:str)->tupl
     suma=0
     for i in range(movies):
         for j in range(len(id_movie)):
-            if id_movie[j]==movies[i]["id"] and int(movies[i]["vote_average"])>=6:
+            if id_movie[j]==movies[i]["id"] and float(movies[i]["vote_average"])>=6:
                 n_peliculas+=1
                 suma+=movies[i]["vote_average"]
     
     return (n_peliculas,suma/n_peliculas)
+    
 def printMenu():
     """
     Imprime el menu de opciones
