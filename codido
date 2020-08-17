@@ -1,10 +1,10 @@
 def cargar_movies(nombre_archivo:str)->list:
     peliculas=[]
-    archivo=open(nombre_archivo,"r")
+    archivo=open(nombre_archivo,"r",encoding="utf8",errors="ignore")
     titulos=archivo.readline()
     linea=archivo.readline()
     while len(linea)>0:
-        datos=linea.split(",")
+        datos=linea.split(";")
         pelicula={}
         pelicula["id"]=datos[0]
         pelicula["budget"]=datos[1]
@@ -26,8 +26,8 @@ def cargar_movies(nombre_archivo:str)->list:
         pelicula["vote_average"]=datos[17]
         pelicula["vote_count"]=datos[18]
         pelicula["production_companies_number"]=datos[19]
-        pelicula["spoken_languages_number"]=datos[20]
-        
+        pelicula["production_countries_number"]=datos[20]
+        pelicula["spoken_languages_number"]=datos[21]
         peliculas.append(pelicula)
         linea=archivo.readline()
     archivo.close()
