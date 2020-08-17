@@ -57,3 +57,30 @@ def req_5(nombre_genero:str,movies:list)->tuple:
             id_movie.append(movies[i]["id"])
             suma+=float(movies[i]["vote_average"])
     return(peliculas,id_movie,suma/len(peliculas))
+    
+def actores(nombre_actor:str, archivo_casting:list,archivo_peliculas:list)->tuple:
+    id_movie=[]
+    directores={}
+    for i in range(len(archivo_casting)):
+        if nombre_actor in archivo_casting[i]["actor1_name"]:
+            id_movie.append(archivo_casting[i]["id"])
+            if archivo_casting[i]["director_name"] not in directores:
+                    directores[archivo_casting[i]["director_name"]]=1
+            if archivo_casting[i]["director_name"] in directores:
+                    directores[archivo_casting[i]["director_name"]]+=1
+    director=0
+    nombre_director=""
+    for i in directores.keys():
+        if directores[i]>director:
+            director=directores[i]
+            nombre_director=i
+        
+    
+    peliculas=[]
+    suma=0
+    for i in range(len(archivo_peliculas)):
+        for j in range(len(id_movie)):
+            if id_movie[j]==archivo_peliculas[i]["id"]:
+                peliculas.append(archivo_peliculas[i]["title"])
+                suma+=float(archivo_peliculas[i]["vote_average"])
+    return (peliculas,id_movie,suma/len(id_movie),nombre_director)
