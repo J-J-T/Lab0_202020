@@ -84,3 +84,18 @@ def actores(nombre_actor:str, archivo_casting:list,archivo_peliculas:list)->tupl
                 peliculas.append(archivo_peliculas[i]["title"])
                 suma+=float(archivo_peliculas[i]["vote_average"])
     return (peliculas,id_movie,suma/len(id_movie),nombre_director)
+    
+def buenas_peliculas(movies:list, movies_casting:str, nombre_director:str)->tuple:
+    id_movie=[]
+    for i in range(len(movies_casting)):
+        if nombre_director in movies_casting[i]["director_name"]:
+            id_movie.append(movies_casting[i]["id"])
+    n_peliculas=0
+    suma=0
+    for i in range(movies):
+        for j in range(len(id_movie)):
+            if id_movie[j]==movies[i]["id"] and int(movies[i]["vote_average"])>=6:
+                n_peliculas+=1
+                suma+=movies[i]["vote_average"]
+    
+    return (n_peliculas,suma/n_peliculas)
