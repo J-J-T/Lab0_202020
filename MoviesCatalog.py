@@ -1,8 +1,11 @@
+import sys
+import csv
+from time import process_time 
 movies=[]
 def newCatalog (file, lst, sep=";"):
-        del lst[:]
+    del lst[:]
     print("Cargando archivo ....")
-    t1_start = process_time() 
+    t1_start = process_time() #tiempo inicial
     dialect = csv.excel()
     dialect.delimiter=sep
     try:
@@ -14,7 +17,7 @@ def newCatalog (file, lst, sep=";"):
         del lst[:]
         print("Se presento un error en la carga del archivo")
     
-    t1_stop = process_time() 
+    t1_stop = process_time() #tiempo final
     print("Tiempo de ejecución ",t1_stop-t1_start," segundos")
 
 def addMovie (movie:tuple):
@@ -99,9 +102,10 @@ def worstAverageVoted (movies:list):
 def ranking_movies(movies:list, numero:int, tipo:str, orden:str):
     rankingmejor=[]
     rankingpeor=[]
+    numero=int(numero)
     if "COUNT"==tipo:
-        counter=numero
-        while (counter-1)!=-1:
+        counter=int(numero)
+        while (counter-1)!=(-1):
             mejor=topVoted(movies)
             rankingmejor.append(mejor)
             counter-=1
@@ -112,6 +116,7 @@ def ranking_movies(movies:list, numero:int, tipo:str, orden:str):
             counter-=1
     if "AVERAGE"==tipo:
         counter=numero
+        print(counter)
         while (counter-1)!=-1:
             mejor=topAverageVoted(movies)
             rankingmejor.append(mejor)
@@ -190,7 +195,47 @@ def req_5(nombre_genero:str,movies:list)->tuple:
             id_movie.append(movies[i]["id"])
             suma+=float(movies[i]["vote_average"])
     return(peliculas,id_movie,suma/len(peliculas))
+def actores(nombre_actor:str, archivo_casting:list,archivo_peliculas:list)->tuple:
+    id_movie=[]
+    directores={}
+    for i in range(len(archivo_casting)):
+        if nombre_actor in archivo_casting[i]["actor1_name"]:
+            id_movie.append(archivo_casting[i]["id"])
+            if archivo_casting[i]["director_name"] not in directores:
+                    directores[archivo_casting[i]["director_name"]]=1
+            if archivo_casting[i]["director_name"] in directores:
+                    directores[archivo_casting[i]["director_name"]]+=1
+    director=0
+    nombre_director=""
+    for i in directores.keys():
+        if directores[i]>director:
+            director=directores[i]
+            nombre_director=i
+        
+    
+    peliculas=[]
+    suma=0
+    for i in range(len(archivo_peliculas)):
+        for j in range(len(id_movie)):
+            if id_movie[j]==archivo_peliculas[i]["id"]:
+                peliculas.append(archivo_peliculas[i]["title"])
+                suma+=float(archivo_peliculas[i]["vote_average"])
+    return (peliculas,id_movie,suma/len(id_movie),nombre_director)
 
+def buenas_peliculas(movies:list, movies_casting:str, nombre_director:str)->tuple:
+    id_movie=[]
+    for i in range(len(movies_casting)):
+        if nombre_director in movies_casting[i]["director_name"]:
+            id_movie.append(movies_casting[i]["id"])
+    n_peliculas=0
+    suma=0
+    for i in range(movies):
+        for j in range(len(id_movie)):
+            if id_movie[j]==movies[i]["id"] and int(movies[i]["vote_average"])>=6:
+                n_peliculas+=1
+                suma+=movies[i]["vote_average"]
+    
+    return (n_peliculas,suma/n_peliculas)
 def printMenu():
     """
     Imprime el menu de opciones
@@ -210,26 +255,25 @@ def main():
     lista2= []
     while True:
         printMenu() 
-
         inputs =input('Seleccione una opción para continuar\n') 
-            if int(inputs[0])==1:
-                loadCSVFile("Data/MoviesCastingRaw-small.csv", lista) 
-                loadCSVFile("Data/SmallMoviesDetailsCleaned.csv",lista2)
-                print("Datos cargados, "+str(len(lista))+" elementos cargados")
-            elif int(inputs[0])==2: 
-                numero=input("Ingrese el numero de pelicular para el ranking")
-                tipo=input("Ingrese el tipo de ranking(COUNT o AVERAGE)")
-                orden=input("Ingrese el orden que desea (ASCENDENTE O DESCENDENTE")
-                print(ranking_movies(lista2,numero,tipo,orden))
-            elif int(inputs[0])==3: 
-                director=input("Ingrese el nombre del director que desea conocer")
-                print(req_3(director,lista2,lista))
-            elif int(inputs[0])==4: 
-                
-            elif int(inputs[0])==5:
-                genero=input("Ingrese el genero")
-                print(req_5(genero,lista2))
-            elif int(inputs[0])==6:
-
-            elif int(inputs[0])==0: 
-                sys.exit(0)
+        if int(inputs[0])==1:
+            newCatalog("Data/MoviesCastingRaw-small.csv", lista) 
+            newCatalog("Data/SmallMoviesDetailsCleaned.csv",lista2)
+            print("Datos cargados, "+str(len(lista))+" elementos cargados ")
+        elif int(inputs[0])==2: 
+            numero=input("Ingrese el numero de peliculas para el ranking ")
+            tipo=input("Ingrese el tipo de ranking(COUNT o AVERAGE) ")
+            orden=input("Ingrese el orden que desea (ASCENDENTE O DESCENDENTE) ")
+            print(ranking_movies(lista2,numero,tipo,orden))
+        elif int(inputs[0])==3: 
+            director=input("Ingrese el nombre del director que desea conocer ")
+            print(req_3(director,lista2,lista))
+        elif int(inputs[0])==5:
+            genero=input("Ingrese el genero ")
+            print(req_5(genero,lista2))
+        elif int(inputs[0])==4:
+            genero=input("Ingrese el nombre del actor ")
+            print(actores(genero,lista,lista2))
+        elif int(inputs[0])==0: 
+            sys.exit(0)
+main()
