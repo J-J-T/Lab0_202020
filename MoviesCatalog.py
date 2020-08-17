@@ -233,7 +233,7 @@ def buenas_peliculas(movies:list, movies_casting:str, nombre_director:str)->tupl
         for j in range(len(id_movie)):
             if id_movie[j]==movies[i]["id"] and float(movies[i]["vote_average"])>=6:
                 n_peliculas+=1
-                suma+=movies[i]["vote_average"]
+                suma+=float(movies[i]["vote_average"])
     
     return (n_peliculas,suma/n_peliculas)
     
