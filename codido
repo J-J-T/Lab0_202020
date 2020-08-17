@@ -32,3 +32,28 @@ def cargar_movies(nombre_archivo:str)->list:
         linea=archivo.readline()
     archivo.close()
     return peliculas
+def req_3(nombre_director:str,movies:list,movies_casting:list)->tuple:
+    id_movie=[]
+    for i in range(len(movies_casting)):
+        if nombre_director in movies_casting[i]["director_name"]:
+            id_movie.append(movies_casting[i]["id"])
+    peliculas=[]
+    suma=0
+    for i in range(len(movies)):
+        for j in range(len(id_movie)):
+            if id_movie[j]==movies[i]["id"]:
+                peliculas.append(movies[i]["title"])
+                suma+=float(movies[i]["vote_average"])
+    return (peliculas,id_movie,suma/(len(id_movie)))
+    
+
+def req_5(nombre_genero:str,movies:list)->tuple:
+    peliculas=[]
+    id_movie=[]
+    suma=0
+    for i in range(len(movies)):
+        if nombre_genero in movies[i]["genres"]:
+            peliculas.append(movies[i]["title"])
+            id_movie.append(movies[i]["id"])
+            suma+=float(movies[i]["vote_average"])
+    return(peliculas,id_movie,suma/len(peliculas))
